@@ -11,7 +11,7 @@ let max, min;
 let chart_type = "heat_map"
 let pitch = 0;
 let pos = null;
-let file = '2017_before.csv'
+let file = 'public/2017_before.csv'
 let map = null
 function successLocation(position) {
     console.log(position)
@@ -25,7 +25,7 @@ function errorLocation() {
 
 function changeYear(value) {
     let suffix = file.substring(5)
-    file = '' + value + '_' + suffix
+    file = 'public/' + value + '_' + suffix
     console.log(file)
     const center = map.getCenter();
     const zoom = map.getZoom();
@@ -42,7 +42,7 @@ function changeView(value) {
 
 function setData(value) {
     let prefix = file.substring(0, 4)
-    file = '' + prefix + '_' + value + '.csv'
+    file = 'public/' + prefix + '_' + value + '.csv'
     console.log(file)
     const center = map.getCenter();
     const zoom = map.getZoom();
