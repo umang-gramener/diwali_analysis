@@ -24,7 +24,7 @@ function errorLocation() {
 }
 
 function changeYear(value) {
-    let suffix = file.substring(5)
+    let suffix = file.split("/")[1].substring(5)
     file = 'public/' + value + '_' + suffix
     console.log(file)
     const center = map.getCenter();
