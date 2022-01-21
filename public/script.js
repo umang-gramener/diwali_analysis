@@ -41,7 +41,7 @@ function changeView(value) {
 }
 
 function setData(value) {
-    let prefix = file.substring(0, 4)
+    let prefix = file.split("/")[1].substring(0, 4)
     file = 'public/' + prefix + '_' + value + '.csv'
     console.log(file)
     const center = map.getCenter();
