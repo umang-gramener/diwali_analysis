@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-scale/0.0.2/scale.js"
+    integrity="sha512-edwuG2mZ1K2ijGpITdrM+X9chZ2hJQ9eA077jgfdKK0cV/fx+DpWfUrFkhCIG5gU3x7oNbaVRGBnsDRgr6QHFQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.3.0/d3.js"
+    integrity="sha512-nkC97gUNsbPjaWQm5GVpreTVy9IJO+z13y1M8mM+1BJRjfp9sz+1ixWu4+1mOMUzIt72pVD9rwjxJKV8LdlvjA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://unpkg.com/h3-js"></script>
+  <script src="https://unpkg.com/deck.gl@^8.1.0/dist.min.js"></script>
+  <script src='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
+  <script src='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' rel='stylesheet' />
+  <title>Document</title>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    #map {
+      height: 100vh !important;
+      width: 100vw !important;
+    }
+
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .form-check-input {
+      width: 16px;
+      height: 16px;
+      margin-top: 0px;
+    }
+
+    #control-panel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-size: 12px;
+      line-height: 2;
+      z-index: 1;
+      background: rgba(0, 0, 0, 0.8);
+      font-family: Helvetica, Arial, sans-serif;
+      color: #fff;
+      width: 250px;
+      text-transform: uppercase;
+    }
+
+    .bg-blue {
+      background-color: #1700eb;
+    }
+
+    label {
+      display: inline-block;
+      width: 140px;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div id="control-panel" class="card vh-100 m-0 rounded-0 border-0">
+    <div class="card-body p-0">
+      <div class="bg-blue p-3">
+        <h4 class="text-uppercase mb-0">Geo Analysis</h4>
+        <p class="mb-0 small">During Diwali - Air Quality (PM-10)</p>
+      </div>
+      <div class="p-3">
+        <div class="d-flex flex-column">
+          <h6 class="pb-2 w-100 text-uppercase fw-bold border-bottom border-light">Chart Type</h6>
+          <div class="d-flex flex-row pb-2 pt-3 align-items-center">
+            <input onchange="changeView(value)" type="radio" id="html" class="form-check-input" name="chart_type"
+              value="heat" checked>
+            <label class="form-check-label ps-2 p mb-0" for="html">Heat Map</label>
+          </div>
+          <div class="d-flex flex-row pb-2 align-items-center">
+            <input onchange="changeView(value)" class="form-check-input" type="radio" id="css" name="chart_type"
+              value="h3hex">
+            <label class="form-check-label ps-2 p mb-0" for="css">H3 Hex</label>
+          </div>
+        </div>
+        <div class="d-flex flex-column pt-4">
+          <h6 class="pb-2 w-100 text-uppercase fw-bold border-bottom border-light">Time Period</h6>
+          <div class="d-flex flex-column pt-3">
+            <label class="form-check-label pb-2 fw-bold text-uppercase" for="html">Year</label>
+            <select onchange='changeYear(value)' name="" id="" class="form-select form-select-sm w-100">
+              <option value="2017" selected>2017</option>
+              <option value="2018">2018</option>
+              <option value="2019">2019</option>
+              <option value="2020">2020</option>
+              <option value="2021">2021</option>
+            </select>
+          </div>
+          <div class="d-flex flex-column pt-3">
+            <label class="form-check-label pb-2 text-uppercase fw-bold" for="html">Period</label>
+            <div class="d-flex flex-row pb-2 align-items-center">
+              <input class="form-check-input" onchange="setData(value)" type="radio" id="before" name="date"
+                value="before" checked>
+              <label class="form-check-label ps-2" for="html">7 day before Diwali</label>
+            </div>
+            <div class="d-flex flex-row pb-2 align-items-center">
+              <input class="form-check-input" onchange="setData(value)" type="radio" id="on" name="date" value="on">
+              <label class="form-check-label  ps-2" for="css">on Diwali</label>
+            </div>
+            <div class="d-flex flex-row pb-2 align-items-center">
+              <input class="form-check-input" onchange="setData(value)" type="radio" id="after" name="date"
+                value="after">
+              <label class="form-check-label ps-2" for="css">7 days after Diwali</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id='map' style='width: 400px; height: 300px;'></div>
+  <script src="script.js" defer></script>
+</body>
+
+</html>
